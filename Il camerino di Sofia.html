@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il camerino di Sofia — Esercizi A1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #17110f;
+    --panel: #221a17;
+    --panel-2: #2b211d;
+    --cream: #f3e9dc;
+    --gold: #d8a54b;
+    --gold-dim: #9c7a3f;
+    --red: #b5372f;
+    --red-dim: #7d2b26;
+    --muted: #b8aa9c;
+    --good: #6fae6f;
+    --bad: #c9605a;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Work Sans', sans-serif;
+    line-height:1.6;
+    padding: 0 0 4rem;
+  }
+  .wrap{max-width: 780px; margin: 0 auto; padding: 0 1.25rem;}
+
+  /* --- Mirror header --- */
+  .mirror{
+    position:relative;
+    margin: 2.5rem auto 3rem;
+    padding: 2.5rem 2rem 2rem;
+    background: var(--panel);
+    border-radius: 50% / 18%;
+    border: 6px solid #3a2c25;
+    text-align:center;
+    max-width: 640px;
+  }
+  .bulbs{position:absolute; inset:0; pointer-events:none;}
+  .bulb{
+    position:absolute;
+    width:12px; height:12px;
+    border-radius:50%;
+    background: var(--gold-dim);
+    box-shadow:0 0 4px 1px rgba(216,165,75,0.15);
+    transition: background .4s, box-shadow .4s;
+  }
+  .bulb.lit{
+    background: var(--gold);
+    box-shadow: 0 0 10px 3px rgba(216,165,75,0.55);
+  }
+  .mirror h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    margin: .2rem 0 .3rem;
+    color: var(--cream);
+  }
+  .mirror p{
+    margin:0; color:var(--muted); font-size:.95rem;
+    font-style:italic;
+  }
+  .progress-line{
+    max-width:640px; margin: 0 auto 2.5rem; text-align:center;
+    color: var(--muted); font-size:.85rem; letter-spacing:.04em;
+  }
+  #progress-fill-wrap{
+    height:3px; background:#3a2c25; border-radius:2px; margin-top:.5rem; overflow:hidden;
+  }
+  #progress-fill{height:100%; width:0%; background:var(--gold); transition:width .4s;}
+
+  /* --- sections --- */
+  section{margin-bottom: 3.5rem;}
+  .eyebrow{
+    font-size:.75rem; letter-spacing:.12em; text-transform:uppercase;
+    color: var(--gold); font-weight:600; margin-bottom:.4rem;
+  }
+  h2{
+    font-family:'Fraunces', serif; font-weight:500;
+    font-size:1.5rem; margin:.1rem 0 1rem; color:var(--cream);
+  }
+  .card{
+    background: var(--panel);
+    border:1px solid #3a2c25;
+    border-radius: var(--radius);
+    padding: 1.5rem 1.5rem;
+  }
+
+  /* --- reading text --- */
+  .script p{margin:0 0 1rem; font-size:1.02rem;}
+  .script p:last-child{margin-bottom:0;}
+
+  /* --- gap fill --- */
+  .gap-item{margin-bottom:1.1rem; font-size:1.02rem;}
+  .gap-item input{
+    width:130px;
+    background: var(--panel-2);
+    border:1px solid var(--gold-dim);
+    border-radius:6px;
+    color: var(--cream);
+    font-family:'Work Sans', sans-serif;
+    font-size:1rem;
+    padding:.35rem .5rem;
+    text-align:center;
+    margin:0 .2rem;
+  }
+  .gap-item input:focus{outline:none; border-color:var(--gold);}
+  .gap-item input.correct{border-color:var(--good); background:rgba(111,174,111,.12);}
+  .gap-item input.wrong{border-color:var(--bad); background:rgba(201,96,90,.12);}
+  .gap-feedback{
+    display:inline-block; margin-left:.5rem; font-size:.85rem; color:var(--muted);
+  }
+  .btn{
+    background: var(--red);
+    color: var(--cream);
+    border:none;
+    padding:.65rem 1.3rem;
+    border-radius:8px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:.95rem;
+    cursor:pointer;
+    transition: background .2s, transform .1s;
+  }
+  .btn:hover{background:#c8443b;}
+  .btn:active{transform:scale(.97);}
+  .btn.secondary{
+    background:transparent; border:1px solid var(--gold-dim); color:var(--gold);
+  }
+  .btn.secondary:hover{background:rgba(216,165,75,.08);}
+  .score-box{margin-top:1.2rem; font-size:.95rem; color:var(--muted);}
+  .score-box b{color:var(--gold);}
+
+  /* --- matching game --- */
+  .match-wrap{display:flex; gap:2rem; flex-wrap:wrap;}
+  .match-col{flex:1; min-width:220px;}
+  .match-col h3{
+    font-size:.8rem; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--muted); margin:0 0 .8rem; font-weight:600;
+  }
+  .chip{
+    background: var(--panel-2);
+    border:1px solid var(--gold-dim);
+    border-radius:8px;
+    padding:.6rem .8rem;
+    margin-bottom:.6rem;
+    cursor:grab;
+    font-weight:500;
+    user-select:none;
+    touch-action:none;
+    position:relative;
+    transition: border-color .2s, background .2s;
+  }
+  .chip.dragging{opacity:.4;}
+  .chip.matched{
+    border-color:var(--good); background:rgba(111,174,111,.1); cursor:default;
+    color:var(--good);
+  }
+  .drop-zone{
+    background: transparent;
+    border:1px dashed #4a3a32;
+    border-radius:8px;
+    padding:.6rem .8rem;
+    margin-bottom:.6rem;
+    min-height:1.4em;
+    color:var(--muted);
+    font-size:.95rem;
+    transition: border-color .2s, background .2s;
+  }
+  .drop-zone.over{border-color:var(--gold); background:rgba(216,165,75,.08);}
+  .drop-zone.filled{border-style:solid; border-color:var(--good); color:var(--cream);}
+  .drop-zone.filled.wrong-match{border-color:var(--bad); color:var(--bad);}
+  .match-status{margin-top:1rem; font-size:.9rem; color:var(--muted);}
+
+  /* --- essay --- */
+  .essay-q{margin-bottom:2.2rem;}
+  .essay-q:last-child{margin-bottom:0;}
+  .essay-q p.prompt{font-size:1.02rem; margin:0 0 .7rem;}
+  textarea{
+    width:100%;
+    min-height:110px;
+    background: var(--panel-2);
+    border:1px solid var(--gold-dim);
+    border-radius:8px;
+    color: var(--cream);
+    font-family:'Work Sans', sans-serif;
+    font-size:.95rem;
+    padding:.7rem;
+    resize:vertical;
+  }
+  textarea:focus{outline:none; border-color:var(--gold);}
+  .reveal-box{
+    margin-top:.8rem;
+    display:none;
+    background: rgba(216,165,75,.07);
+    border-left:2px solid var(--gold);
+    border-radius:0;
+    padding:.7rem .9rem;
+    font-size:.92rem;
+    color: var(--muted);
+  }
+  .reveal-box.shown{display:block;}
+  .reveal-box b{color:var(--gold); display:block; margin-bottom:.3rem; font-weight:600;}
+  .err{color:var(--bad); font-size:.82rem; margin-top:.4rem; display:none;}
+  .err.shown{display:block;}
+
+  footer{text-align:center; color:var(--muted); font-size:.8rem; margin-top:3rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mirror">
+    <div class="bulbs" id="bulbs"></div>
+    <h1>Il camerino di Sofia</h1>
+    <p>Esercizi di italiano — livello A1</p>
+  </div>
+
+  <div class="progress-line">
+    <span id="progress-text">0 di 3 esercizi completati</span>
+    <div id="progress-fill-wrap"><div id="progress-fill"></div></div>
+  </div>
+
+  <section>
+    <div class="eyebrow">Testo</div>
+    <h2>La giornata di Sofia, un'attrice</h2>
+    <div class="card script">
+      <p>Sofia è un'attrice italiana. Ogni giorno si sveglia sempre alle sette e si alza subito dal letto. Prima si lava i denti e poi si fa la doccia. Dopo la doccia, si veste con calma e si trucca per il lavoro.</p>
+      <p>Sofia si prepara sempre un caffè prima di uscire. Spesso si allena in palestra la mattina, perché per il suo lavoro è importante essere in forma. Qualche volta si rilassa a casa con un libro, ma spesso deve andare a teatro per le prove.</p>
+      <p>Prima dello spettacolo, si veste con il costume e si trucca di nuovo. Non si stressa mai prima di andare sul palco, perché ama il suo lavoro. Dopo lo spettacolo, si sente felice e stanca.</p>
+      <p>La sera, Sofia si lava di nuovo e si mette il pigiama. Non si addormenta mai tardi, perché la mattina dopo si sveglia presto!</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Esercizio 1</div>
+    <h2>Completa con il verbo riflessivo</h2>
+    <div class="card">
+      <div id="gap-list"></div>
+      <button class="btn" id="check-gaps">Controlla</button>
+      <button class="btn secondary" id="reset-gaps" style="margin-left:.5rem;">Ricomincia</button>
+      <div class="score-box" id="gap-score"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Esercizio 2</div>
+    <h2>Abbina l'infinito alla forma coniugata</h2>
+    <div class="card">
+      <div class="match-wrap">
+        <div class="match-col">
+          <h3>Infinito</h3>
+          <div id="chip-col"></div>
+        </div>
+        <div class="match-col">
+          <h3>Forma con "io"</h3>
+          <div id="drop-col"></div>
+        </div>
+      </div>
+      <div class="match-status" id="match-status">Trascina ogni infinito sulla sua forma coniugata.</div>
+      <button class="btn secondary" id="reset-match" style="margin-top:.8rem;">Ricomincia</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Esercizio 3</div>
+    <h2>Domande aperte</h2>
+    <div class="card">
+      <div class="essay-q" data-q="1">
+        <p class="prompt">1. Descrivi la tua routine mattutina. Usa almeno tre verbi riflessivi (ad esempio: svegliarsi, alzarsi, lavarsi, vestirsi...).</p>
+        <textarea placeholder="Scrivi qui la tua risposta..."></textarea>
+        <div class="err">Scrivi qualche frase prima di vedere la risposta suggerita.</div>
+        <button class="btn secondary reveal-btn" style="margin-top:.6rem;">Mostra risposta suggerita</button>
+        <div class="reveal-box">
+          <b>Risposta suggerita</b>
+          Ogni mattina mi sveglio alle sette e mi alzo subito. Mi lavo i denti e mi faccio la doccia. Poi mi vesto e faccio colazione prima di uscire di casa.
+        </div>
+      </div>
+      <div class="essay-q" data-q="2">
+        <p class="prompt">2. Secondo te, perché Sofia non si stressa mai prima dello spettacolo? Che cosa fai tu per rilassarti prima di un momento importante?</p>
+        <textarea placeholder="Scrivi qui la tua risposta..."></textarea>
+        <div class="err">Scrivi qualche frase prima di vedere la risposta suggerita.</div>
+        <button class="btn secondary reveal-btn" style="margin-top:.6rem;">Mostra risposta suggerita</button>
+        <div class="reveal-box">
+          <b>Risposta suggerita</b>
+          Sofia non si stressa mai perché ama il suo lavoro e ha una routine fissa prima dello spettacolo. Anch'io, prima di un esame, mi rilasso con la musica e non mi preoccupo troppo.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Il camerino di Sofia — esercizi A1 sui verbi riflessivi</footer>
+</div>
+
+<script>
+/* ---------- bulbs ---------- */
+(function(){
+  const wrap = document.getElementById('bulbs');
+  const n = 14;
+  for(let i=0;i<n;i++){
+    const b = document.createElement('div');
+    b.className='bulb';
+    const angle = (Math.PI/ (n-1)) * i - Math.PI/2;
+    const cx = 50 + Math.cos(angle)*46;
+    const cy = 50 + Math.sin(angle)*46 + 6;
+    b.style.left = cx+'%';
+    b.style.top = cy+'%';
+    b.dataset.idx=i;
+    wrap.appendChild(b);
+  }
+})();
+function litBulbs(count){
+  const bulbs = document.querySelectorAll('.bulb');
+  bulbs.forEach((b,i)=>{ if(i<count) b.classList.add('lit'); });
+}
+let exercisesDone = {gap:false, match:false, essay:false};
+function updateProgress(){
+  const done = Object.values(exercisesDone).filter(Boolean).length;
+  document.getElementById('progress-text').textContent = done + ' di 3 esercizi completati';
+  document.getElementById('progress-fill').style.width = (done/3*100)+'%';
+  litBulbs(Math.round(done/3*14));
+}
+
+/* ---------- Exercise 1: gap fill ---------- */
+const gapData = [
+  {before:"Ogni giorno Sofia ", after:" sempre alle sette.", answer:"si sveglia"},
+  {before:"Prima ", after:" i denti e poi fa la doccia.", answer:"si lava"},
+  {before:"Dopo la doccia, ", after:" con calma.", answer:"si veste"},
+  {before:"Spesso ", after:" in palestra la mattina.", answer:"si allena"},
+  {before:"Qualche volta ", after:" a casa con un libro.", answer:"si rilassa"},
+  {before:"Non ", after:" mai prima di andare sul palco.", answer:"si stressa"},
+  {before:"La sera, Sofia ", after:" il pigiama.", answer:"si mette"},
+  {before:"Non ", after:" mai tardi.", answer:"si addormenta"}
+];
+const gapList = document.getElementById('gap-list');
+gapData.forEach((item, idx)=>{
+  const div = document.createElement('div');
+  div.className='gap-item';
+  div.innerHTML = item.before + '<input type="text" data-idx="'+idx+'" autocomplete="off">' + item.after;
+  gapList.appendChild(div);
+});
+document.getElementById('check-gaps').addEventListener('click', ()=>{
+  let correct = 0;
+  gapData.forEach((item, idx)=>{
+    const input = gapList.querySelector('input[data-idx="'+idx+'"]');
+    const val = input.value.trim().toLowerCase().replace(/\s+/g,' ');
+    const ok = val === item.answer.toLowerCase();
+    input.classList.remove('correct','wrong');
+    input.classList.add(ok ? 'correct':'wrong');
+    if(ok) correct++;
+  });
+  document.getElementById('gap-score').innerHTML = 'Hai <b>'+correct+'</b> risposte corrette su '+gapData.length+'.';
+  if(correct === gapData.length){ exercisesDone.gap = true; updateProgress(); }
+});
+document.getElementById('reset-gaps').addEventListener('click', ()=>{
+  gapList.querySelectorAll('input').forEach(i=>{ i.value=''; i.classList.remove('correct','wrong'); });
+  document.getElementById('gap-score').textContent='';
+});
+
+/* ---------- Exercise 2: drag and drop matching ---------- */
+const matchPairs = [
+  {id:'m1', it:'svegliarsi', en:'mi sveglio'},
+  {id:'m2', it:'alzarsi', en:'mi alzo'},
+  {id:'m3', it:'vestirsi', en:'mi vesto'},
+  {id:'m4', it:'truccarsi', en:'mi trucco'},
+  {id:'m5', it:'allenarsi', en:'mi alleno'},
+  {id:'m6', it:'rilassarsi', en:'mi rilasso'}
+];
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+const chipCol = document.getElementById('chip-col');
+const dropCol = document.getElementById('drop-col');
+const shuffledChips = shuffle(matchPairs);
+const shuffledDrops = shuffle(matchPairs);
+
+shuffledChips.forEach(p=>{
+  const chip = document.createElement('div');
+  chip.className='chip';
+  chip.textContent = p.it;
+  chip.dataset.id = p.id;
+  chip.draggable = true;
+  chipCol.appendChild(chip);
+});
+shuffledDrops.forEach(p=>{
+  const zone = document.createElement('div');
+  zone.className='drop-zone';
+  zone.textContent = p.en;
+  zone.dataset.id = p.id;
+  dropCol.appendChild(zone);
+});
+
+let matchedCount = 0;
+let dragged = null;
+
+chipCol.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('dragstart', e=>{
+    if(chip.classList.contains('matched')){ e.preventDefault(); return; }
+    dragged = chip;
+    chip.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', chip.dataset.id);
+  });
+  chip.addEventListener('dragend', ()=> chip.classList.remove('dragging'));
+});
+
+dropCol.querySelectorAll('.drop-zone').forEach(zone=>{
+  zone.addEventListener('dragover', e=>{
+    if(zone.classList.contains('filled')) return;
+    e.preventDefault();
+    zone.classList.add('over');
+  });
+  zone.addEventListener('dragleave', ()=> zone.classList.remove('over'));
+  zone.addEventListener('drop', e=>{
+    e.preventDefault();
+    zone.classList.remove('over');
+    if(zone.classList.contains('filled')) return;
+    const id = e.dataTransfer.getData('text/plain');
+    const chip = chipCol.querySelector('.chip[data-id="'+id+'"]');
+    if(!chip) return;
+    handleMatch(chip, zone);
+  });
+});
+
+function handleMatch(chip, zone){
+  const correct = chip.dataset.id === zone.dataset.id;
+  if(correct){
+    chip.classList.add('matched');
+    chip.draggable = false;
+    zone.classList.add('filled');
+    zone.textContent = chip.textContent + ' — ' + zone.textContent;
+    matchedCount++;
+    document.getElementById('match-status').textContent = matchedCount+' di '+matchPairs.length+' coppie trovate.';
+    if(matchedCount === matchPairs.length){
+      document.getElementById('match-status').textContent = 'Ottimo lavoro! Tutte le coppie sono corrette.';
+      exercisesDone.match = true;
+      updateProgress();
+    }
+  } else {
+    zone.classList.add('filled','wrong-match');
+    const originalText = zone.textContent;
+    setTimeout(()=>{ zone.classList.remove('filled','wrong-match'); zone.textContent = originalText; }, 700);
+    document.getElementById('match-status').textContent = 'Non corretto, riprova.';
+  }
+}
+
+/* touch support (pointer-based drag) */
+let touchChip = null, touchGhost = null;
+chipCol.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('touchstart', e=>{
+    if(chip.classList.contains('matched')) return;
+    touchChip = chip;
+  }, {passive:true});
+});
+dropCol.addEventListener('touchend', e=>{
+  if(!touchChip) return;
+  const touch = e.changedTouches[0];
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  const zone = el ? el.closest('.drop-zone') : null;
+  if(zone && !zone.classList.contains('filled')){
+    handleMatch(touchChip, zone);
+  }
+  touchChip = null;
+});
+/* simpler tap-to-select fallback for touch devices */
+let selectedChip = null;
+chipCol.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    if(chip.classList.contains('matched')) return;
+    chipCol.querySelectorAll('.chip').forEach(c=>c.style.borderColor='');
+    selectedChip = chip;
+    chip.style.borderColor = 'var(--gold)';
+  });
+});
+dropCol.querySelectorAll('.drop-zone').forEach(zone=>{
+  zone.addEventListener('click', ()=>{
+    if(!selectedChip || zone.classList.contains('filled')) return;
+    handleMatch(selectedChip, zone);
+    selectedChip = null;
+  });
+});
+
+document.getElementById('reset-match').addEventListener('click', ()=>{
+  chipCol.innerHTML=''; dropCol.innerHTML='';
+  matchedCount = 0;
+  document.getElementById('match-status').textContent = 'Trascina ogni verbo sul suo significato.';
+  const newChips = shuffle(matchPairs);
+  const newDrops = shuffle(matchPairs);
+  newChips.forEach(p=>{
+    const chip = document.createElement('div');
+    chip.className='chip'; chip.textContent=p.it; chip.dataset.id=p.id; chip.draggable=true;
+    chip.addEventListener('dragstart', e=>{
+      if(chip.classList.contains('matched')){ e.preventDefault(); return; }
+      chip.classList.add('dragging');
+      e.dataTransfer.setData('text/plain', chip.dataset.id);
+    });
+    chip.addEventListener('dragend', ()=> chip.classList.remove('dragging'));
+    chip.addEventListener('click', ()=>{
+      if(chip.classList.contains('matched')) return;
+      chipCol.querySelectorAll('.chip').forEach(c=>c.style.borderColor='');
+      selectedChip = chip; chip.style.borderColor='var(--gold)';
+    });
+    chipCol.appendChild(chip);
+  });
+  newDrops.forEach(p=>{
+    const zone = document.createElement('div');
+    zone.className='drop-zone'; zone.textContent=p.en; zone.dataset.id=p.id;
+    zone.addEventListener('dragover', e=>{ if(zone.classList.contains('filled')) return; e.preventDefault(); zone.classList.add('over'); });
+    zone.addEventListener('dragleave', ()=> zone.classList.remove('over'));
+    zone.addEventListener('drop', e=>{
+      e.preventDefault(); zone.classList.remove('over');
+      if(zone.classList.contains('filled')) return;
+      const id = e.dataTransfer.getData('text/plain');
+      const chip = chipCol.querySelector('.chip[data-id="'+id+'"]');
+      if(chip) handleMatch(chip, zone);
+    });
+    zone.addEventListener('click', ()=>{
+      if(!selectedChip || zone.classList.contains('filled')) return;
+      handleMatch(selectedChip, zone);
+      selectedChip = null;
+    });
+    dropCol.appendChild(zone);
+  });
+});
+
+/* ---------- Exercise 3: essay reveal ---------- */
+document.querySelectorAll('.essay-q').forEach(q=>{
+  const btn = q.querySelector('.reveal-btn');
+  const box = q.querySelector('.reveal-box');
+  const ta = q.querySelector('textarea');
+  const err = q.querySelector('.err');
+  btn.addEventListener('click', ()=>{
+    if(ta.value.trim().length < 10){
+      err.classList.add('shown');
+      return;
+    }
+    err.classList.remove('shown');
+    box.classList.add('shown');
+    btn.textContent = 'Nascondi risposta suggerita';
+    btn.onclick = ()=>{
+      box.classList.toggle('shown');
+      btn.textContent = box.classList.contains('shown') ? 'Nascondi risposta suggerita' : 'Mostra risposta suggerita';
+    };
+    checkEssayDone();
+  });
+  ta.addEventListener('input', ()=> err.classList.remove('shown'));
+});
+function checkEssayDone(){
+  const boxes = document.querySelectorAll('.reveal-box');
+  const shownCount = Array.from(boxes).filter(b=>b.classList.contains('shown')).length;
+  if(shownCount >= 1 && !exercisesDone.essay){
+    exercisesDone.essay = true;
+    updateProgress();
+  }
+}
+updateProgress();
+</script>
+</body>
+</html>

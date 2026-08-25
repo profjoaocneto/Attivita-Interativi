@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Menù del Giorno — Mangiare a Roma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #efe6d4;
+    --paper-light: #faf4e7;
+    --ink: #2b2420;
+    --ink-soft: #5c5347;
+    --olive: #5c6e42;
+    --olive-dark: #47562f;
+    --brick: #a6432e;
+    --brick-dark: #8a3323;
+    --gold: #c89b3c;
+    --line: #d8cbae;
+    --shadow: 0 2px 0 rgba(43,36,32,0.08);
+  }
+
+  *{ box-sizing: border-box; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.35), transparent 55%),
+      var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+    padding: 32px 16px 80px;
+  }
+
+  .wrap{ max-width: 880px; margin: 0 auto; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    text-align:center;
+    padding: 20px 10px 32px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .hero .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing: 3px;
+    font-size: 12px;
+    color: var(--brick);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero h1{
+    font-family:'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    margin: 0 0 8px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 em{
+    font-style: italic;
+    font-weight: 500;
+    color: var(--olive-dark);
+  }
+  .hero p.sub{
+    font-family:'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .hero .leaf{
+    position:absolute;
+    font-size: 22px;
+    opacity:.55;
+  }
+  .hero .leaf.l{ left: 8px; top: 8px; }
+  .hero .leaf.r{ right: 8px; top: 8px; }
+
+  /* ---------- COURSE SECTIONS ---------- */
+  .course{
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 26px 24px 30px;
+    margin-bottom: 34px;
+    box-shadow: var(--shadow);
+  }
+  .course-head{
+    display:flex;
+    align-items:baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .course-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--brick);
+    letter-spacing: 2px;
+    border: 1px solid var(--brick);
+    border-radius: 20px;
+    padding: 2px 10px;
+  }
+  .course h2{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.7rem;
+    margin: 0;
+  }
+  .course .instructions{
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin: 6px 0 22px;
+    max-width: 60ch;
+  }
+
+  /* ---------- GAP FILL ---------- */
+  .reading{
+    font-size: 1.08rem;
+  }
+  .reading p{ margin: 0 0 16px; }
+  .gap{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.95rem;
+    width: 96px;
+    padding: 3px 8px;
+    border: 1.5px solid var(--line);
+    border-bottom: 2px solid var(--ink);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.6);
+    color: var(--ink);
+    text-align: center;
+    outline-offset: 3px;
+  }
+  .gap:focus{ outline: 2px solid var(--olive); background: rgba(92,110,66,0.08); }
+  .gap.correct{ border-color: var(--olive); border-bottom-color: var(--olive); background: rgba(92,110,66,0.14); color: var(--olive-dark); font-weight:600; }
+  .gap.incorrect{ border-color: var(--brick); border-bottom-color: var(--brick); background: rgba(166,67,46,0.12); }
+  .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    color: var(--olive-dark);
+    background: rgba(92,110,66,0.12);
+    border-radius: 8px;
+    padding: 1px 7px;
+    margin-left: 4px;
+    white-space: nowrap;
+    display:none;
+  }
+  .tag.show{ display:inline-block; }
+
+  .gapfill-actions{
+    display:flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    align-items:center;
+  }
+
+  button.btn{
+    font-family:'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 18px;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  button.btn:active{ transform: translateY(1px); }
+  button.btn:focus-visible{ outline: 3px solid var(--gold); outline-offset: 2px; }
+  .btn-primary{ background: var(--olive); color: #fff; }
+  .btn-primary:hover{ background: var(--olive-dark); }
+  .btn-ghost{ background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+  .btn-ghost:hover{ background: rgba(43,36,32,0.06); }
+
+  .gapfill-score{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- MATCHING GAME ---------- */
+  .match-layout{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+  }
+  @media (max-width: 620px){
+    .match-layout{ grid-template-columns: 1fr; }
+  }
+  .tray-label, .plates-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    display:block;
+  }
+  .tray{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content:flex-start;
+    min-height: 60px;
+    padding: 12px;
+    border: 1.5px dashed var(--line);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.4);
+  }
+  .chip{
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    box-shadow: 1px 2px 0 rgba(43,36,32,0.18);
+    transition: transform .1s ease, box-shadow .1s ease, opacity .15s ease;
+    position: relative;
+  }
+  .chip:active{ cursor: grabbing; }
+  .chip.selected{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+  }
+  .chip.placed{
+    opacity: 0;
+    pointer-events: none;
+    position:absolute;
+  }
+  .chip:focus-visible{ outline: 3px solid var(--gold); outline-offset: 2px; }
+  .chip.shake{ animation: shake .35s ease; }
+  @keyframes shake{
+    0%,100%{ transform: translateX(0); }
+    25%{ transform: translateX(-6px); }
+    75%{ transform: translateX(6px); }
+  }
+
+  .plates{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .plate{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.5);
+    min-height: 46px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .plate:focus-visible{ outline: 3px solid var(--gold); outline-offset: 2px; }
+  .plate.hover{ border-color: var(--gold); background: rgba(200,155,60,0.14); }
+  .plate.filled{ border-color: var(--olive); background: rgba(92,110,66,0.12); }
+  .plate .def{
+    flex: 1;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .plate .slot{
+    min-width: 92px;
+    text-align:center;
+    font-family:'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--olive-dark);
+  }
+  .plate.filled .check{ color: var(--olive); font-weight:700; }
+
+  .drag-ghost{
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 8px 16px;
+    box-shadow: 2px 4px 8px rgba(43,36,32,0.25);
+    opacity: 0.95;
+  }
+
+  .match-meta{
+    margin-top: 16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- RECEIPT / IL CONTO ---------- */
+  .receipt{
+    max-width: 340px;
+    margin: 10px auto 0;
+    background: #fffdf8;
+    border: 1px solid var(--line);
+    padding: 22px 22px 26px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--ink);
+    position: relative;
+    box-shadow: var(--shadow);
+    clip-path: polygon(
+      0% 0%, 100% 0%, 100% 96%,
+      92% 100%, 84% 96%, 76% 100%, 68% 96%, 60% 100%, 52% 96%,
+      44% 100%, 36% 96%, 28% 100%, 20% 96%, 12% 100%, 4% 96%, 0% 100%
+    );
+    padding-bottom: 100px;
+  }
+  .receipt h3{
+    font-family:'Fraunces', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 1.15rem;
+    text-align:center;
+    margin: 0 0 4px;
+  }
+  .receipt .addr{
+    text-align:center;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .receipt .rule{
+    border-top: 1px dashed var(--ink-soft);
+    margin: 10px 0;
+  }
+  .receipt .row{
+    display:flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 4px 0;
+  }
+  .receipt .row .name{ flex:1; }
+  .receipt .row .val{ font-weight:600; }
+  .receipt .total{
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+  .stamp{
+    position: absolute;
+    left: 50%;
+    bottom: 34px;
+    transform: translateX(-50%) rotate(-10deg) scale(0.85);
+    border: 3px solid var(--brick);
+    color: var(--brick);
+    font-family:'IBM Plex Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity .4s ease, transform .4s ease;
+    text-align:center;
+    line-height: 1.3;
+    background: rgba(255,255,255,0.75);
+    white-space: nowrap;
+  }
+  .stamp.show{
+    opacity: 1;
+    transform: translateX(-50%) rotate(-10deg) scale(1);
+  }
+
+  footer.note{
+    text-align:center;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <span class="leaf l" aria-hidden="true">🌿</span>
+    <span class="leaf r" aria-hidden="true">🌿</span>
+    <div class="eyebrow">Dieci A1 · Lezioni 0–5</div>
+    <h1>Il Menù <em>del Giorno</em></h1>
+    <p class="sub">due portate di grammatica e vocabolario, ispirate a «Mangiare a Roma»</p>
+  </div>
+
+  <!-- ============ PRIMO: GAP FILL ============ -->
+  <section class="course" id="primo">
+    <div class="course-head">
+      <span class="course-num">Primo</span>
+      <h2>Riempi gli spazi</h2>
+    </div>
+    <p class="instructions">Leggi il testo e completa ogni spazio con la parola giusta. Quando hai finito, premi «Controlla le risposte».</p>
+
+    <div class="reading" id="reading">
+      <p><input class="gap" data-answer="Nel" data-cat="preposizione articolata" size="4"><span class="tag">nel</span> centro di Roma ci sono molti ristoranti e trattorie tipiche. Nelle trattorie i turisti <input class="gap" data-answer="mangiano" data-cat="verbo al presente"><span class="tag">verbo</span> piatti italiani. Ci sono anche molte pizzerie con pizze buone e economiche.</p>
+
+      <p>La mattina gli italiani prendono un cappuccino e un cornetto <input class="gap" data-answer="al" data-cat="preposizione articolata" size="4"><span class="tag">al</span> bar. <input class="gap" data-answer="Il" data-cat="articolo determinativo" size="4"><span class="tag">art. det.</span> cornetto è dolce e il cappuccino è caldo. A pranzo le persone mangiano <input class="gap" data-answer="un" data-cat="articolo indeterminativo" size="4"><span class="tag">art. indet.</span> primo piatto, per esempio la pasta, e un secondo piatto con carne o pesce. <input class="gap" data-answer="Sul" data-cat="preposizione articolata" size="4"><span class="tag">sul</span> tavolo <input class="gap" data-answer="c'è" data-cat="verbo esserci" size="5"><span class="tag">esserci</span> sempre il pane fresco.</p>
+
+      <p>Nel quartiere di Trastevere <input class="gap" data-answer="ci sono" data-cat="verbo esserci" size="8"><span class="tag">esserci</span> ristoranti romantici. Gli amici parlano e <input class="gap" data-answer="bevono" data-cat="verbo al presente" size="8"><span class="tag">verbo</span> un bicchiere di vino rosso. I camerieri sono <input class="gap" data-answer="gentili" data-cat="aggettivo plurale" size="7"><span class="tag">agg. pl.</span> e portano i piatti caldi.</p>
+
+      <p><input class="gap" data-answer="Alla" data-cat="preposizione articolata" size="5"><span class="tag">alla</span> fine del pasto gli italiani prendono un caffè piccolo e forte. Dopo il caffè, a volte mangiano un dolce, come il tiramisù.</p>
+
+      <p>Vicino al Colosseo ci sono anche mercati con frutta e verdura fresca. Le persone <input class="gap" data-answer="comprano" data-cat="verbo al presente" size="9"><span class="tag">verbo</span> pomodori <input class="gap" data-answer="rossi" data-cat="aggettivo plurale" size="6"><span class="tag">agg. pl.</span>, mele verdi e formaggio.</p>
+
+      <p><em>Mangiare a Roma è un'esperienza fantastica!</em></p>
+    </div>
+
+    <div class="gapfill-actions">
+      <button class="btn btn-primary" id="checkGaps">Controlla le risposte</button>
+      <button class="btn btn-ghost" id="revealGaps">Mostra soluzioni</button>
+      <button class="btn btn-ghost" id="resetGaps">Ricomincia</button>
+      <span class="gapfill-score" id="gapScore">0 / 13 corrette</span>
+    </div>
+  </section>
+
+  <!-- ============ SECONDO: MATCHING GAME ============ -->
+  <section class="course" id="secondo">
+    <div class="course-head">
+      <span class="course-num">Secondo</span>
+      <h2>Abbina le parole</h2>
+    </div>
+    <p class="instructions">Trascina ogni parola italiana sul piatto con la definizione giusta. (Puoi anche toccare una parola e poi toccare il piatto giusto.)</p>
+
+    <div class="match-layout">
+      <div>
+        <span class="tray-label">Vassoio delle parole</span>
+        <div class="tray" id="tray"></div>
+      </div>
+      <div>
+        <span class="plates-label">Piatti</span>
+        <div class="plates" id="plates"></div>
+      </div>
+    </div>
+    <div class="match-meta" id="matchScore">0 / 8 abbinate</div>
+  </section>
+
+  <!-- ============ IL CONTO ============ -->
+  <div class="receipt" id="receipt">
+    <h3>Il Conto</h3>
+    <div class="addr">Trattoria «Dieci A1» · Roma</div>
+    <div class="rule"></div>
+    <div class="row"><span class="name">Primo — spazi vuoti</span><span class="val" id="rGap">0/13</span></div>
+    <div class="row"><span class="name">Secondo — abbinamento</span><span class="val" id="rMatch">0/8</span></div>
+    <div class="rule"></div>
+    <div class="row total"><span class="name">Totale</span><span class="val" id="rTotal">0%</span></div>
+    <div class="stamp" id="stamp">CONTO<br>SALDATO ✓</div>
+  </div>
+
+  <footer class="note">Buon appetito — e buono studio!</footer>
+</div>
+
+<script>
+(function(){
+  /* ---------------- GAP FILL ---------------- */
+  const gaps = Array.from(document.querySelectorAll('.gap'));
+  const gapScoreEl = document.getElementById('gapScore');
+  const rGapEl = document.getElementById('rGap');
+
+  function normalize(s){
+    return s.trim().toLowerCase().replace(/['’]/g,"'");
+  }
+
+  function checkGaps(){
+    let correct = 0;
+    gaps.forEach(inp => {
+      const ans = normalize(inp.dataset.answer);
+      const val = normalize(inp.value);
+      const tag = inp.nextElementSibling;
+      if(val === ans){
+        inp.classList.add('correct');
+        inp.classList.remove('incorrect');
+        correct++;
+      } else {
+        inp.classList.add('incorrect');
+        inp.classList.remove('correct');
+      }
+      if(tag && tag.classList.contains('tag')) tag.classList.add('show');
+    });
+    gapScoreEl.textContent = correct + ' / ' + gaps.length + ' corrette';
+    rGapEl.textContent = correct + '/' + gaps.length;
+    updateTotal();
+  }
+
+  function revealGaps(){
+    gaps.forEach(inp => {
+      inp.value = inp.dataset.answer;
+      inp.classList.add('correct');
+      inp.classList.remove('incorrect');
+      const tag = inp.nextElementSibling;
+      if(tag && tag.classList.contains('tag')) tag.classList.add('show');
+    });
+    gapScoreEl.textContent = gaps.length + ' / ' + gaps.length + ' corrette';
+    rGapEl.textContent = gaps.length + '/' + gaps.length;
+    updateTotal();
+  }
+
+  function resetGaps(){
+    gaps.forEach(inp => {
+      inp.value = '';
+      inp.classList.remove('correct','incorrect');
+      const tag = inp.nextElementSibling;
+      if(tag && tag.classList.contains('tag')) tag.classList.remove('show');
+    });
+    gapScoreEl.textContent = '0 / ' + gaps.length + ' corrette';
+    rGapEl.textContent = '0/' + gaps.length;
+    updateTotal();
+  }
+
+  document.getElementById('checkGaps').addEventListener('click', checkGaps);
+  document.getElementById('revealGaps').addEventListener('click', revealGaps);
+  document.getElementById('resetGaps').addEventListener('click', resetGaps);
+
+  gaps.forEach(inp => {
+    inp.addEventListener('keydown', e => {
+      if(e.key === 'Enter'){ e.preventDefault(); checkGaps(); }
+    });
+  });
+
+  /* ---------------- MATCHING GAME ---------------- */
+  const pairs = [
+    { id:'m1', word:'cappuccino', def:'caffè con latte montato, si beve la mattina' },
+    { id:'m2', word:'cornetto', def:'dolce da colazione, tipo croissant' },
+    { id:'m3', word:'pane', def:'alimento fatto di farina, acqua e lievito' },
+    { id:'m4', word:'vino rosso', def:'bevanda alcolica fatta con uva rossa' },
+    { id:'m5', word:'tiramisù', def:'dolce al caffè, tipico italiano' },
+    { id:'m6', word:'pomodori', def:'verdura rossa, ingrediente del sugo' },
+    { id:'m7', word:'formaggio', def:'alimento fatto con il latte' },
+    { id:'m8', word:'cameriere', def:'persona che serve i piatti al ristorante' },
+  ];
+
+  // shuffle a copy for word order in tray, and separately for plate order
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  const tray = document.getElementById('tray');
+  const platesEl = document.getElementById('plates');
+  const matchScoreEl = document.getElementById('matchScore');
+  const rMatchEl = document.getElementById('rMatch');
+
+  let matchedCount = 0;
+  let selectedChip = null;
+
+  const wordOrder = shuffle(pairs);
+  wordOrder.forEach(p => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = p.word;
+    chip.dataset.id = p.id;
+    chip.setAttribute('tabindex','0');
+    chip.setAttribute('role','button');
+    chip.setAttribute('aria-label', 'Parola: ' + p.word);
+    tray.appendChild(chip);
+  });
+
+  const plateOrder = shuffle(pairs);
+  plateOrder.forEach(p => {
+    const plate = document.createElement('div');
+    plate.className = 'plate';
+    plate.dataset.id = p.id;
+    plate.setAttribute('tabindex','0');
+    plate.setAttribute('role','button');
+    plate.setAttribute('aria-label', 'Piatto: ' + p.def);
+    plate.innerHTML = '<span class="def">' + p.def + '</span><span class="slot">—</span>';
+    platesEl.appendChild(plate);
+  });
+
+  function updateMatchScore(){
+    matchScoreEl.textContent = matchedCount + ' / ' + pairs.length + ' abbinate';
+    rMatchEl.textContent = matchedCount + '/' + pairs.length;
+    updateTotal();
+  }
+
+  function tryMatch(chip, plate){
+    if(chip.dataset.id === plate.dataset.id){
+      plate.classList.add('filled');
+      plate.classList.remove('hover');
+      plate.querySelector('.slot').innerHTML = '<span class="check">✓</span> ' + chip.textContent;
+      chip.classList.add('placed');
+      chip.setAttribute('aria-hidden','true');
+      chip.tabIndex = -1;
+      matchedCount++;
+      updateMatchScore();
+    } else {
+      plate.classList.remove('hover');
+      plate.classList.add('hover');
+      chip.classList.add('shake');
+      setTimeout(()=>{ chip.classList.remove('shake'); plate.classList.remove('hover'); }, 350);
+    }
+    if(selectedChip){
+      selectedChip.classList.remove('selected');
+      selectedChip = null;
+    }
+  }
+
+  // Click / tap select-then-place fallback (also fully keyboard accessible)
+  tray.addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if(!chip || chip.classList.contains('placed')) return;
+    if(selectedChip === chip){
+      chip.classList.remove('selected');
+      selectedChip = null;
+      return;
+    }
+    if(selectedChip) selectedChip.classList.remove('selected');
+    selectedChip = chip;
+    chip.classList.add('selected');
+  });
+
+  tray.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      e.target.click();
+    }
+  });
+
+  platesEl.addEventListener('click', e => {
+    const plate = e.target.closest('.plate');
+    if(!plate || plate.classList.contains('filled')) return;
+    if(selectedChip){
+      tryMatch(selectedChip, plate);
+    }
+  });
+
+  platesEl.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      e.target.click();
+    }
+  });
+
+  // Pointer-based drag and drop (mouse + touch)
+  let dragChip = null;
+  let ghost = null;
+
+  function onPointerDown(e){
+    const chip = e.target.closest('.chip');
+    if(!chip || chip.classList.contains('placed')) return;
+    dragChip = chip;
+    chip.setPointerCapture && chip.setPointerCapture(e.pointerId);
+    ghost = document.createElement('div');
+    ghost.className = 'drag-ghost';
+    ghost.textContent = chip.textContent;
+    document.body.appendChild(ghost);
+    moveGhost(e.clientX, e.clientY);
+    e.preventDefault();
+  }
+
+  function moveGhost(x,y){
+    if(!ghost) return;
+    ghost.style.left = (x - ghost.offsetWidth/2) + 'px';
+    ghost.style.top = (y - ghost.offsetHeight/2) + 'px';
+  }
+
+  function onPointerMove(e){
+    if(!dragChip) return;
+    moveGhost(e.clientX, e.clientY);
+    document.querySelectorAll('.plate').forEach(pl => pl.classList.remove('hover'));
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const plate = el && el.closest('.plate');
+    if(plate && !plate.classList.contains('filled')) plate.classList.add('hover');
+  }
+
+  function onPointerUp(e){
+    if(!dragChip) return;
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const plate = el && el.closest('.plate');
+    if(plate && !plate.classList.contains('filled')){
+      tryMatch(dragChip, plate);
+    }
+    document.querySelectorAll('.plate').forEach(pl => pl.classList.remove('hover'));
+    if(ghost){ ghost.remove(); ghost = null; }
+    dragChip = null;
+  }
+
+  tray.addEventListener('pointerdown', onPointerDown);
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
+
+  /* ---------------- IL CONTO (total + stamp) ---------------- */
+  const rTotalEl = document.getElementById('rTotal');
+  const stampEl = document.getElementById('stamp');
+  const totalItems = gaps.length + pairs.length;
+
+  function updateTotal(){
+    const correctGaps = document.querySelectorAll('.gap.correct').length;
+    const done = correctGaps + matchedCount;
+    const pct = Math.round((done/totalItems)*100);
+    rTotalEl.textContent = pct + '%';
+    if(pct === 100){
+      stampEl.classList.add('show');
+    } else {
+      stampEl.classList.remove('show');
+    }
+  }
+
+  updateTotal();
+})();
+</script>
+</body>
+</html>

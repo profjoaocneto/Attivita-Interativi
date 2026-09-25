@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Palloncini dei Participi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky-top: #cfeafd;
+    --sky-bottom: #eef8ff;
+    --ink: #1c2b45;
+    --ink-soft: #4a5875;
+    --card: #fffdf8;
+    --card-line: #d9e6f2;
+    --meadow: #2f8f5b;
+    --meadow-bg: #e4f6ec;
+    --pop-red: #e0435b;
+    --pop-bg: #fbe4e7;
+    --gold: #e2a53a;
+    --c1: #e0435b;
+    --c2: #ef8a3d;
+    --c3: #f0c23e;
+    --c4: #3fae6a;
+    --c5: #2fb6ad;
+    --c6: #3d84e6;
+    --c7: #8a5cd6;
+    --c8: #e0609e;
+    --focus: #2f6fd6;
+    --shadow-soft: 0 10px 30px rgba(28, 43, 69, 0.10);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --sky-top: #0e1c33;
+      --sky-bottom: #16233a;
+      --ink: #eef3fb;
+      --ink-soft: #aeb9cf;
+      --card: #1b2942;
+      --card-line: #2c3c5c;
+      --meadow-bg: #16352a;
+      --pop-bg: #3a1e24;
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --sky-top: #0e1c33;
+    --sky-bottom: #16233a;
+    --ink: #eef3fb;
+    --ink-soft: #aeb9cf;
+    --card: #1b2942;
+    --card-line: #2c3c5c;
+    --meadow-bg: #16352a;
+    --pop-bg: #3a1e24;
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 65%);
+    min-height: 100%;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Baloo 2', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    margin: 0;
+  }
+  button { font-family: inherit; }
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 20px 56px;
+  }
+
+  /* ---------- Clouds decoration ---------- */
+  .cloud-field {
+    position: relative;
+    height: 0;
+    overflow: visible;
+  }
+  .cloud {
+    position: absolute;
+    opacity: 0.55;
+    filter: blur(0.3px);
+  }
+  .cloud svg { display: block; width: 90px; }
+  .cloud.a { top: 18px; left: 4%; }
+  .cloud.b { top: 60px; right: 6%; width: 70px; }
+  .cloud.c { top: -6px; left: 42%; opacity: 0.35; }
+
+  /* ---------- Screens ---------- */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ---------- Intro ---------- */
+  .intro-card {
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 22px;
+    box-shadow: var(--shadow-soft);
+    padding: 38px 34px;
+    text-align: left;
+  }
+  .intro-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+  .intro-balloon-row { display: flex; gap: 6px; }
+  .mini-balloon {
+    width: 14px; height: 17px;
+    border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+  }
+  h1.title {
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+  .intro-text {
+    font-size: 1.08rem;
+    line-height: 1.65;
+    color: var(--ink);
+    max-width: 62ch;
+  }
+  .intro-text p { margin: 0 0 14px; }
+  .intro-text .accent-stat {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .intro-meta {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--card-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .intro-meta .hint {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+  }
+
+  .btn {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 999px;
+    padding: 14px 26px;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #fff;
+    background: linear-gradient(180deg, #3d84e6, #2f6fd6);
+    box-shadow: 0 8px 20px rgba(47, 111, 214, 0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(47, 111, 214, 0.42); }
+  .btn:active { transform: translateY(1px) scale(0.99); }
+  .btn.secondary {
+    background: transparent;
+    color: var(--focus);
+    box-shadow: none;
+    border: 2px solid var(--card-line);
+  }
+  .btn.secondary:hover { border-color: var(--focus); }
+
+  /* ---------- Game header ---------- */
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+  .progress {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .progress strong { color: var(--ink); }
+  .score-pill {
+    background: var(--meadow-bg);
+    color: var(--meadow);
+    font-weight: 700;
+    font-family: 'Baloo 2', sans-serif;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  /* ---------- Balloon cluster ---------- */
+  .balloon-stage {
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 22px;
+    box-shadow: var(--shadow-soft);
+    padding: 22px 18px 8px;
+  }
+  .balloon-cluster {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
+    height: 128px;
+    position: relative;
+  }
+  .balloon-unit {
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+  .balloon-unit:nth-child(2n) { margin-bottom: 10px; }
+  .balloon {
+    width: 40px;
+    height: 48px;
+    border-radius: 50% 50% 50% 50% / 58% 58% 42% 42%;
+    position: relative;
+    box-shadow: inset -5px -6px 10px rgba(0,0,0,0.12), inset 4px 5px 8px rgba(255,255,255,0.35);
+    animation: bob 3.4s ease-in-out infinite;
+  }
+  .balloon::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: -7px;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid currentColor;
+  }
+  .balloon-unit .string {
+    width: 1px;
+    height: 34px;
+    background: var(--ink-soft);
+    opacity: 0.45;
+  }
+  .balloon-unit:nth-child(1) .balloon, .balloon-unit:nth-child(1) .balloon::after { color: var(--c1); background: var(--c1); }
+  .balloon-unit:nth-child(2) .balloon, .balloon-unit:nth-child(2) .balloon::after { color: var(--c2); background: var(--c2); }
+  .balloon-unit:nth-child(3) .balloon, .balloon-unit:nth-child(3) .balloon::after { color: var(--c3); background: var(--c3); }
+  .balloon-unit:nth-child(4) .balloon, .balloon-unit:nth-child(4) .balloon::after { color: var(--c4); background: var(--c4); }
+  .balloon-unit:nth-child(5) .balloon, .balloon-unit:nth-child(5) .balloon::after { color: var(--c5); background: var(--c5); }
+  .balloon-unit:nth-child(6) .balloon, .balloon-unit:nth-child(6) .balloon::after { color: var(--c6); background: var(--c6); }
+  .balloon-unit:nth-child(7) .balloon, .balloon-unit:nth-child(7) .balloon::after { color: var(--c7); background: var(--c7); }
+  .balloon-unit:nth-child(8) .balloon, .balloon-unit:nth-child(8) .balloon::after { color: var(--c8); background: var(--c8); }
+  .balloon-unit:nth-child(1) .balloon { animation-delay: 0s; }
+  .balloon-unit:nth-child(2) .balloon { animation-delay: 0.3s; }
+  .balloon-unit:nth-child(3) .balloon { animation-delay: 0.6s; }
+  .balloon-unit:nth-child(4) .balloon { animation-delay: 0.9s; }
+  .balloon-unit:nth-child(5) .balloon { animation-delay: 1.2s; }
+  .balloon-unit:nth-child(6) .balloon { animation-delay: 1.5s; }
+  .balloon-unit:nth-child(7) .balloon { animation-delay: 1.8s; }
+  .balloon-unit:nth-child(8) .balloon { animation-delay: 2.1s; }
+
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+    50% { transform: translateY(-6px) rotate(1.5deg); }
+  }
+
+  .balloon-unit.popping .balloon {
+    animation: popscale 0.28s ease-out forwards;
+  }
+  @keyframes popscale {
+    0% { transform: scale(1); opacity: 1; }
+    55% { transform: scale(1.35); opacity: 1; }
+    100% { transform: scale(0.2); opacity: 0; }
+  }
+  .balloon-unit.popped .balloon,
+  .balloon-unit.popped .balloon::after { visibility: hidden; }
+  .balloon-unit.popped .string { opacity: 0.15; }
+
+  .shard-burst {
+    position: absolute;
+    width: 40px; height: 48px;
+    pointer-events: none;
+  }
+  .shard {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 6px; height: 6px;
+    border-radius: 2px;
+    opacity: 0;
+  }
+  .balloon-unit.popping .shard {
+    animation: shardfly 0.42s ease-out forwards;
+  }
+  @keyframes shardfly {
+    0% { opacity: 1; transform: translate(-50%,-50%) rotate(0deg) translateY(0); }
+    100% { opacity: 0; transform: translate(-50%,-50%) rotate(var(--rot)) translateY(-26px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .balloon { animation: none; }
+    .balloon-unit.popping .balloon { animation: none; opacity: 0; transform: scale(0.2); }
+  }
+
+  .wrong-letters {
+    text-align: center;
+    min-height: 22px;
+    color: var(--pop-red);
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    padding: 10px 0 16px;
+  }
+
+  /* ---------- Clue ---------- */
+  .clue-card {
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 20px 22px;
+    margin-top: 16px;
+  }
+  .clue-label {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    color: var(--focus);
+    font-size: 0.98rem;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .clue-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--focus);
+    color: #fff;
+    font-size: 0.85rem;
+  }
+  .clue-desinenza {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 2px 0 8px;
+  }
+  .clue-body {
+    color: var(--ink-soft);
+    line-height: 1.55;
+    font-size: 0.98rem;
+  }
+
+  /* ---------- Word ---------- */
+  .word-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 26px 0;
+  }
+  .letter-tile {
+    width: 40px;
+    height: 48px;
+    border-bottom: 4px solid var(--card-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .letter-tile.revealed { border-bottom-color: var(--meadow); }
+  .letter-tile .fill {
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .letter-tile.revealed .fill { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Keyboard ---------- */
+  .keyboard {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .key {
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    padding: 12px 0;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    color: var(--ink);
+    box-shadow: 0 3px 0 var(--card-line);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+  .key:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--card-line); }
+  .key:disabled { cursor: default; }
+  .key.correct { background: var(--meadow-bg); border-color: var(--meadow); color: var(--meadow); box-shadow: 0 3px 0 var(--meadow); }
+  .key.wrong { background: var(--pop-bg); border-color: var(--pop-red); color: var(--pop-red); box-shadow: 0 3px 0 var(--pop-red); opacity: 0.75; }
+
+  .round-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  /* ---------- Round result overlay ---------- */
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 22px;
+    box-shadow: var(--shadow-soft);
+    padding: 30px 28px;
+    text-align: center;
+    animation: risein 0.35s ease;
+  }
+  @keyframes risein {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-headline {
+    font-size: 1.6rem;
+    margin-bottom: 6px;
+  }
+  .result-headline.win { color: var(--meadow); }
+  .result-headline.lose { color: var(--pop-red); }
+  .result-word {
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: capitalize;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+  .pairs-table {
+    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px 14px;
+    max-width: 460px;
+    margin: 0 auto 8px;
+  }
+  .pairs-table .inf { color: var(--ink-soft); }
+  .pairs-table .arrow { color: var(--card-line); }
+  .pairs-table .part { font-weight: 700; color: var(--ink); }
+  .pairs-table .note {
+    grid-column: 1 / -1;
+    color: var(--ink-soft);
+    font-size: 0.86rem;
+    margin: -2px 0 4px;
+    font-style: italic;
+  }
+  .pairs-table .part.hit { color: var(--focus); }
+
+  /* ---------- End screen ---------- */
+  .end-card {
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 22px;
+    box-shadow: var(--shadow-soft);
+    padding: 40px 34px;
+    text-align: center;
+  }
+  .end-score {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin: 12px 0 4px;
+  }
+  .end-sub { color: var(--ink-soft); margin-bottom: 26px; }
+
+  @media (max-width: 480px) {
+    .keyboard { grid-template-columns: repeat(6, 1fr); }
+    .letter-tile { width: 32px; height: 42px; font-size: 1.2rem; }
+    .balloon-cluster { gap: 6px; }
+    .balloon-unit, .balloon { width: 30px; }
+    .balloon { height: 36px; }
+    .intro-card, .clue-card, .result-card, .end-card { padding: 24px 18px; }
+    .pairs-table { grid-template-columns: 1fr auto 1fr; font-size: 0.92rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="cloud-field" aria-hidden="true">
+    <div class="cloud a"><svg viewBox="0 0 90 40" fill="#ffffff"><ellipse cx="20" cy="26" rx="18" ry="12"/><ellipse cx="42" cy="18" rx="20" ry="16"/><ellipse cx="64" cy="26" rx="16" ry="11"/></svg></div>
+    <div class="cloud b"><svg viewBox="0 0 90 40" fill="#ffffff"><ellipse cx="20" cy="26" rx="18" ry="12"/><ellipse cx="42" cy="18" rx="20" ry="16"/><ellipse cx="64" cy="26" rx="16" ry="11"/></svg></div>
+    <div class="cloud c"><svg viewBox="0 0 90 40" fill="#ffffff"><ellipse cx="20" cy="26" rx="18" ry="12"/><ellipse cx="42" cy="18" rx="20" ry="16"/><ellipse cx="64" cy="26" rx="16" ry="11"/></svg></div>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <section id="screen-intro" class="screen active">
+    <div class="intro-card">
+      <div class="intro-eyebrow">
+        <span class="intro-balloon-row">
+          <span class="mini-balloon" style="background:#e0435b"></span>
+          <span class="mini-balloon" style="background:#ef8a3d"></span>
+          <span class="mini-balloon" style="background:#3fae6a"></span>
+          <span class="mini-balloon" style="background:#3d84e6"></span>
+          <span class="mini-balloon" style="background:#8a5cd6"></span>
+        </span>
+        <span>Un gioco sui participi passati irregolari</span>
+      </div>
+      <h1 class="title">Palloncini dei Participi</h1>
+      <div class="intro-text">
+        <p>I participi passati dei verbi irregolari? Impossibile evitarli :(</p>
+        <p>La buona notizia è che circa il <span class="accent-stat">90%</span> di loro termina in <strong>-sto, -tto, -so, -rto, -lto</strong> o <strong>-nto</strong>, e la maggior parte di questi participi irregolari deriva da verbi che finiscono in <strong>-ere</strong>.</p>
+      </div>
+      <div class="intro-meta">
+        <span class="hint">Indovina la parola prima che scoppino tutti gli otto palloncini.</span>
+        <button class="btn" id="btn-start">Inizia il gioco</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAME SCREEN -->
+  <section id="screen-game" class="screen">
+    <div class="game-header">
+      <div class="progress">Parola <strong id="round-num">1</strong> di <strong id="round-total">39</strong></div>
+      <div class="score-pill" id="score-pill">0 indovinate</div>
+    </div>
+
+    <div class="balloon-stage">
+      <div class="balloon-cluster" id="balloon-cluster"></div>
+      <div class="wrong-letters" id="wrong-letters">&nbsp;</div>
+    </div>
+
+    <div class="clue-card">
+      <div class="clue-label"><span class="clue-badge" id="clue-letter">A</span> Desinenza</div>
+      <div class="clue-desinenza" id="clue-desinenza">-sto</div>
+      <div class="clue-body" id="clue-body"></div>
+    </div>
+
+    <div class="word-row" id="word-row"></div>
+
+    <div class="keyboard" id="keyboard"></div>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section id="screen-result" class="screen">
+    <div class="result-card">
+      <h2 class="result-headline" id="result-headline">Bravo!</h2>
+      <div class="result-word" id="result-word">rimasto</div>
+      <div class="pairs-table" id="pairs-table"></div>
+      <div class="round-actions">
+        <button class="btn" id="btn-next">Prossima parola</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- END SCREEN -->
+  <section id="screen-end" class="screen">
+    <div class="end-card">
+      <h2>Hai finito tutti i palloncini!</h2>
+      <div class="end-score" id="end-score">0 / 39</div>
+      <div class="end-sub">parole indovinate senza far scoppiare tutti i palloncini</div>
+      <button class="btn" id="btn-restart">Gioca di nuovo</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var GROUPS = [
+    {
+      id: "A",
+      desinenza: "-sto",
+      body: "Un gruppo produttivo di participi termina in -sto. Si tratta per lo più di verbi che indicano posizione, percezione o richiesta. Molti di loro finiscono in -ggere o -ivere.",
+      words: ["chiesto", "risposto", "visto", "nascosto", "proposto", "rimasto"],
+      pairs: [
+        ["Chiedere", "Chiesto"],
+        ["Rispondere", "Risposto"],
+        ["Vedere", "Visto"],
+        ["Nascondere", "Nascosto"],
+        ["Proporre", "Proposto"],
+        ["Rimanere", "Rimasto", "Usa l'ausiliare essere: rimasta, rimasti, rimaste"]
+      ]
+    },
+    {
+      id: "B",
+      desinenza: "-tto",
+      body: "Il gruppo singolo più numeroso. La desinenza deriva dal suffisso latino -ctum, che in italiano si è trasformato in -tto.",
+      words: ["fatto", "detto", "letto", "scritto", "fritto", "cotto", "rotto", "tradotto"],
+      pairs: [
+        ["Fare", "Fatto"],
+        ["Dire", "Detto"],
+        ["Leggere", "Letto"],
+        ["Scrivere", "Scritto"],
+        ["Friggere", "Fritto"],
+        ["Cuocere", "Cotto"],
+        ["Rompere", "Rotto"],
+        ["Tradurre", "Tradotto"]
+      ]
+    },
+    {
+      id: "C",
+      desinenza: "-so",
+      body: "Molti di loro finiscono in -dere.",
+      words: ["preso", "acceso", "speso", "deciso", "ucciso", "riso", "chiuso", "offeso", "concluso"],
+      pairs: [
+        ["Prendere", "Preso"],
+        ["Accendere", "Acceso"],
+        ["Spendere", "Speso"],
+        ["Decidere", "Deciso"],
+        ["Uccidere", "Ucciso"],
+        ["Ridere", "Riso"],
+        ["Chiudere", "Chiuso"],
+        ["Offendere", "Offeso"],
+        ["Concludere", "Concluso"]
+      ]
+    },
+    {
+      id: "D",
+      desinenza: "-sso",
+      body: "Molti finiscono in -ere.",
+      words: ["messo", "mosso", "permesso", "espresso"],
+      pairs: [
+        ["Mettere", "Messo"],
+        ["Muovere", "Mosso"],
+        ["Permettere", "Permesso"],
+        ["Esprimere", "Espresso"]
+      ]
+    },
+    {
+      id: "E",
+      desinenza: "-rto",
+      body: "Un gruppo ristretto ma estremamente comune, tutto in -ire.",
+      words: ["aperto", "offerto", "sofferto", "coperto", "scoperto"],
+      pairs: [
+        ["Aprire", "Aperto"],
+        ["Offrire", "Offerto"],
+        ["Soffrire", "Sofferto"],
+        ["Coprire", "Coperto"],
+        ["Scoprire", "Scoperto"]
+      ]
+    },
+    {
+      id: "F",
+      desinenza: "-lto",
+      body: "Verbi che finiscono in -gliere.",
+      words: ["scelto", "tolto", "raccolto", "risolto", "sciolto"],
+      pairs: [
+        ["Scegliere", "Scelto"],
+        ["Togliere", "Tolto"],
+        ["Raccogliere", "Raccolto"],
+        ["Risolvere", "Risolto"],
+        ["Sciogliere", "Sciolto"]
+      ]
+    },
+    {
+      id: "G",
+      desinenza: "-nto",
+      body: "Verbi che finiscono in -ngere e alcuni in -ungere.",
+      words: ["pianto", "spento", "vinto", "aggiunto", "assunto", "raggiunto", "dipinto"],
+      pairs: [
+        ["Piangere", "Pianto"],
+        ["Spegnere", "Spento"],
+        ["Vincere", "Vinto"],
+        ["Aggiungere", "Aggiunto"],
+        ["Assumere", "Assunto"],
+        ["Raggiungere", "Raggiunto"],
+        ["Dipingere", "Dipinto"]
+      ]
+    }
+  ];
+
+  var ALPHABET = ["a","b","c","d","e","f","g","h","i","l","m","n","o","p","q","r","s","t","u","v","z"];
+  var MAX_MISSES = 8;
+
+  var allWords = [];
+  GROUPS.forEach(function (g, gi) {
+    g.words.forEach(function (w) {
+      allWords.push({ word: w, groupIndex: gi });
+    });
+  });
+  var TOTAL_ROUNDS = allWords.length;
+
+  var state = {
+    queue: [],
+    roundIndex: 0,
+    correctCount: 0,
+    current: null,
+    guessed: {},
+    misses: 0
+  };
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  var screens = {
+    intro: document.getElementById("screen-intro"),
+    game: document.getElementById("screen-game"),
+    result: document.getElementById("screen-result"),
+    end: document.getElementById("screen-end")
+  };
+  function showScreen(name) {
+    Object.keys(screens).forEach(function (k) {
+      screens[k].classList.toggle("active", k === name);
+    });
+  }
+
+  var balloonCluster = document.getElementById("balloon-cluster");
+  var wrongLettersEl = document.getElementById("wrong-letters");
+  var clueLetterEl = document.getElementById("clue-letter");
+  var clueDesinenzaEl = document.getElementById("clue-desinenza");
+  var clueBodyEl = document.getElementById("clue-body");
+  var wordRowEl = document.getElementById("word-row");
+  var keyboardEl = document.getElementById("keyboard");
+  var roundNumEl = document.getElementById("round-num");
+  var roundTotalEl = document.getElementById("round-total");
+  var scorePillEl = document.getElementById("score-pill");
+  var resultHeadlineEl = document.getElementById("result-headline");
+  var resultWordEl = document.getElementById("result-word");
+  var pairsTableEl = document.getElementById("pairs-table");
+  var endScoreEl = document.getElementById("end-score");
+
+  roundTotalEl.textContent = TOTAL_ROUNDS;
+
+  function buildBalloons() {
+    balloonCluster.innerHTML = "";
+    for (var i = 0; i < MAX_MISSES; i++) {
+      var unit = document.createElement("div");
+      unit.className = "balloon-unit";
+      unit.dataset.index = i;
+
+      var balloon = document.createElement("div");
+      balloon.className = "balloon";
+
+      var burst = document.createElement("div");
+      burst.className = "shard-burst";
+      for (var s = 0; s < 6; s++) {
+        var shard = document.createElement("span");
+        shard.className = "shard";
+        shard.style.setProperty("--rot", (s * 60) + "deg");
+        shard.style.background = "currentColor";
+        burst.appendChild(shard);
+      }
+
+      var string = document.createElement("div");
+      string.className = "string";
+
+      unit.appendChild(balloon);
+      unit.appendChild(burst);
+      unit.appendChild(string);
+      balloonCluster.appendChild(unit);
+    }
+  }
+
+  function popBalloon(index) {
+    var unit = balloonCluster.querySelector('.balloon-unit[data-index="' + index + '"]');
+    if (!unit) return;
+    unit.classList.add("popping");
+    setTimeout(function () {
+      unit.classList.add("popped");
+    }, 260);
+  }
+
+  function buildKeyboard() {
+    keyboardEl.innerHTML = "";
+    ALPHABET.forEach(function (letter) {
+      var key = document.createElement("button");
+      key.className = "key";
+      key.type = "button";
+      key.textContent = letter;
+      key.dataset.letter = letter;
+      key.addEventListener("click", function () { guessLetter(letter); });
+      keyboardEl.appendChild(key);
+    });
+  }
+
+  function buildWordRow(word) {
+    wordRowEl.innerHTML = "";
+    for (var i = 0; i < word.length; i++) {
+      var tile = document.createElement("div");
+      tile.className = "letter-tile";
+      tile.dataset.index = i;
+      var fill = document.createElement("span");
+      fill.className = "fill";
+      fill.textContent = word[i];
+      tile.appendChild(fill);
+      wordRowEl.appendChild(tile);
+    }
+  }
+
+  function refreshScore() {
+    scorePillEl.textContent = state.correctCount + " indovinate";
+  }
+
+  function startGame() {
+    state.queue = shuffle(allWords);
+    state.roundIndex = 0;
+    state.correctCount = 0;
+    refreshScore();
+    buildKeyboard();
+    showScreen("game");
+    nextRound();
+  }
+
+  function nextRound() {
+    if (state.roundIndex >= state.queue.length) {
+      endGame();
+      return;
+    }
+    var item = state.queue[state.roundIndex];
+    var group = GROUPS[item.groupIndex];
+    state.current = { word: item.word, group: group };
+    state.guessed = {};
+    state.misses = 0;
+
+    roundNumEl.textContent = state.roundIndex + 1;
+
+    clueLetterEl.textContent = group.id;
+    clueDesinenzaEl.textContent = group.desinenza;
+    clueBodyEl.textContent = group.body;
+
+    buildBalloons();
+    wrongLettersEl.innerHTML = "&nbsp;";
+    buildWordRow(item.word);
+
+    var keys = keyboardEl.querySelectorAll(".key");
+    keys.forEach(function (k) {
+      k.disabled = false;
+      k.classList.remove("correct", "wrong");
+    });
+
+    showScreen("game");
+  }
+
+  function guessLetter(letter) {
+    if (!state.current || state.guessed[letter]) return;
+    state.guessed[letter] = true;
+
+    var key = keyboardEl.querySelector('.key[data-letter="' + letter + '"]');
+    var word = state.current.word;
+
+    if (word.indexOf(letter) !== -1) {
+      if (key) key.classList.add("correct");
+      if (key) key.disabled = true;
+      revealLetter(letter);
+      if (isWordComplete()) {
+        finishRound(true);
+      }
+    } else {
+      if (key) key.classList.add("wrong");
+      if (key) key.disabled = true;
+      addWrongLetter(letter);
+      popBalloon(state.misses);
+      state.misses++;
+      if (state.misses >= MAX_MISSES) {
+        finishRound(false);
+      }
+    }
+  }
+
+  function revealLetter(letter) {
+    var word = state.current.word;
+    var tiles = wordRowEl.querySelectorAll(".letter-tile");
+    for (var i = 0; i < word.length; i++) {
+      if (word[i] === letter) {
+        tiles[i].classList.add("revealed");
+      }
+    }
+  }
+
+  function isWordComplete() {
+    var word = state.current.word;
+    for (var i = 0; i < word.length; i++) {
+      if (!state.guessed[word[i]]) return false;
+    }
+    return true;
+  }
+
+  function addWrongLetter(letter) {
+    if (wrongLettersEl.innerHTML === "&nbsp;") wrongLettersEl.innerHTML = "";
+    wrongLettersEl.textContent = wrongLettersEl.textContent
+      ? wrongLettersEl.textContent + "  " + letter.toUpperCase()
+      : letter.toUpperCase();
+  }
+
+  function revealWholeWord() {
+    var tiles = wordRowEl.querySelectorAll(".letter-tile");
+    tiles.forEach(function (t) { t.classList.add("revealed"); });
+  }
+
+  function finishRound(won) {
+    if (won) {
+      state.correctCount++;
+      refreshScore();
+    } else {
+      revealWholeWord();
+    }
+
+    setTimeout(function () {
+      showResult(won);
+    }, won ? 420 : 500);
+  }
+
+  function showResult(won) {
+    resultHeadlineEl.textContent = won ? "Bravo! Palloncini salvi." : "Oh no, palloncini scoppiati!";
+    resultHeadlineEl.className = "result-headline " + (won ? "win" : "lose");
+    resultWordEl.textContent = state.current.word;
+
+    pairsTableEl.innerHTML = "";
+    var group = state.current.group;
+    var pair = null;
+    for (var i = 0; i < group.pairs.length; i++) {
+      if (group.pairs[i][1].toLowerCase() === state.current.word) {
+        pair = group.pairs[i];
+        break;
+      }
+    }
+    if (pair) {
+      var inf = document.createElement("div");
+      inf.className = "inf";
+      inf.textContent = pair[0];
+
+      var arrow = document.createElement("div");
+      arrow.className = "arrow";
+      arrow.textContent = "→";
+
+      var part = document.createElement("div");
+      part.className = "part hit";
+      part.textContent = pair[1];
+
+      pairsTableEl.appendChild(inf);
+      pairsTableEl.appendChild(arrow);
+      pairsTableEl.appendChild(part);
+
+      if (pair[2]) {
+        var note = document.createElement("div");
+        note.className = "note";
+        note.textContent = pair[2];
+        pairsTableEl.appendChild(note);
+      }
+    }
+
+    showScreen("result");
+  }
+
+  function endGame() {
+    endScoreEl.textContent = state.correctCount + " / " + TOTAL_ROUNDS;
+    showScreen("end");
+  }
+
+  document.getElementById("btn-start").addEventListener("click", startGame);
+  document.getElementById("btn-next").addEventListener("click", function () {
+    state.roundIndex++;
+    nextRound();
+  });
+  document.getElementById("btn-restart").addEventListener("click", startGame);
+
+  document.addEventListener("keydown", function (e) {
+    if (!screens.game.classList.contains("active")) return;
+    var letter = e.key ? e.key.toLowerCase() : "";
+    if (ALPHABET.indexOf(letter) !== -1) {
+      guessLetter(letter);
+    }
+  });
+})();
+</script>
+</body>
+</html>
